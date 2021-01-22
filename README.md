@@ -17,6 +17,7 @@
 - [배열](#배열)
 - [반복문](#반복문)
 - [배열 내장함수](#배열-내장함수)
+- [Reducer](#reducer)
 
 ### Codesandbox
 
@@ -483,10 +484,142 @@ console.log(obj.length);
 
 6. filter
    따로 조건을 만족시키는 경우만 필터링
+
    - true false 인 경우는 true false 반환 가능
+
    ```jsx
    const taskNotDone = todos.filter((todo) => todo.done === false);
    console.log(taskNotDone);
    const taskNotDone = todos.filter((todo) => !todo.done);
    console.log(taskNotDone);
    ```
+
+7. splice, slice
+
+   - splice
+
+   * 배열에서 항목을 선택해서 삭제 (반환값으로 삭제된 항목 가져오기 가능)
+
+   ```jsx
+   const numbers = [10, 20, 30, 40];
+   const index = numbers.indexOf(30);
+   numbers.splice(index, 2);
+   console.log(numbers);
+   ```
+
+   - slice
+     - 배열에서 짤라서 가져오기 -> 기존 배열 건드리지 않음(불변성 유지)
+     ```jsx
+     const numbers = [10, 20, 30, 40];
+     const sliced = numbers.slice(0, 2);
+     console.log(sliced);
+     console.log(numbers);
+     ```
+
+8. shift
+
+   - 첫 번째 원소를 밖으로 꺼냄(불변성 유지 x)
+
+   ```jsx
+   const numbers = [10, 20, 30, 40];
+
+   const value = numbers.shift();
+   console.log(value);
+   console.log(numbers);
+   ```
+
+9. pop
+
+   - 뒤 쪽 부터 밖으로 꺼냄(불변성 유지 x)
+
+   ```jsx
+   const numbers = [10, 20, 30, 40];
+
+   const value = numbers.pop();
+   console.log(value);
+   console.log(numbers);
+
+   ans = (3)[(10, 20, 30)];
+   ```
+
+10. unshift
+
+    - 첫 번째 인덱스에 원소 추가(불변성 유지 x)
+
+    ```jsx
+    const numbers = [10, 20, 30, 40];
+    numbers.unshift(5);
+    console.log(numbers);
+
+    ans = (5)[(5, 10, 20, 30, 40)];
+    ```
+
+11. concat
+
+    - 불변성 유지
+
+    * 여러개 배열을 하나의 배열로 만들어 줌
+
+    - spread 연산자와 비슷
+
+    ```jsx
+    const arr = [1, 2, 3];
+    const arr2 = [4, 5, 6];
+
+    const concated = arr.concat(arr2);
+
+    console.log(concated);
+
+    ans = (6)[(1, 2, 3, 4, 5, 6)];
+    ```
+
+12. join
+
+    - 불변성 유지
+
+    * 배열을 문자열로 만들어줌
+
+    - join의 par 값으로 ' '나 ', ' 이렇게도 사용 가능하다.
+
+    ```jsx
+    const arr = [1, 2, 3, 4, 5];
+
+    console.log(arr.join());
+    ```
+
+### Reducer
+
+- 배열이 주어졌을 때 배열 안 값들 사용하여 연산
+
+- 첫 번째 파라미터 : accumulator(누적된 값 )
+  - 루프를 돌려서 누적된 값을 만드는 함수
+- 두 번째 파라미터 : current(배열 값)
+- 세 번째 파라미터 : 인덱스(index)
+- 네 번째 파라미터 : 배열(arrary)
+
+```jsx
+const number = [1, 2, 3, 4, 5];
+
+const avg = number.reduce((accumulator, current, index, arr) => {
+  if (index === arr.length - 1) return (accumulator + current) / (index + 1);
+  return accumulator + current;
+});
+console.log(avg);
+```
+
+- 위의 코드의 경우는 accumulator에 누적된 값이 마지막 인덱스의 배열 값 까지 더해 졌을 경우 평균을 구해주는 코드이다. 3번째 인자의 index 값과 4번째 인자의 arr(배열) 값을 사용하여서 길이를 판단 한뒤 이를 활용한다.
+
+```jsx
+const alpha = ["a", "a", "a", "b", "c", "d", "c", "c", "c"];
+
+const my = alpha.reduce((acc, current) => {
+  if (acc[current]) {
+    acc[current] += 1;
+  } else {
+    acc[current] = 1;
+  }
+  return acc;
+}, {});
+
+console.log(my);
+```
