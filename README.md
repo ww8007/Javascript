@@ -623,3 +623,200 @@ const my = alpha.reduce((acc, current) => {
 
 console.log(my);
 ```
+
+- reducer 예제
+
+```jsx
+function countBiggerThanTen(numbers) {
+  return numbers.reduce((acc, current) => {
+    if (current > 10) {
+      return acc + 1;
+    } else {
+      return acc;
+    }
+  }, 0);
+}
+
+const count = countBiggerThanTen([1, 2, 3, 5, 10, 20, 30, 40, 50, 60]);
+console.log(count); // 5
+
+export default countBiggerThanTen;
+```
+
+### 프로토타입과 클래스
+
+- 객체 생성자
+  함수를 통해 새로운 객체를 만들고 그 안에 함수를 넣을 수 있게 해줌
+  - 객체 생성자 통해 새로운 객체 -> **new**
+
+```jsx
+function Animal(type, name, sound) {
+  this.type = type;
+  this.name = name;
+  this.sound = sound;
+  this.say = function () {
+    console.log(this.sound);
+  };
+}
+
+const dog = new Animal("개", "멍멍이", "멍멍");
+const cat = new Animal("고양이", "야옹이", "야옹~");
+
+dog.say();
+cat.say();
+```
+
+위의 코드는 함수의 내용은 같지만 두 번이나 선언이 되고 있음
+-> say가 같은 기능을 한다면 밖으로 꺼내 재사용
+
+- 프로토타입을 사용하여 재사용이 가능하게 함
+
+```jsx
+Animal.prototype.say = function () {
+  console.log(this.sound);
+};
+```
+
+```jsx
+Animal.prototype.sharedvalue = 1;
+```
+
+위 와 같이 상수를 선언하여 모든 객체에 삽입도 가능하다.
+
+### 객체생성자 상속
+
+call
+1 par : 객체 생성자 함수에서의 this
+2 ~ other : par
+
+- prototype 을 통해 각 객체가 가지고 있는 값을 통해 기능 구현 가능
+
+```javascript
+function Animal(type, name, sound) {
+  this.type = type;
+  this.name = name;
+  this.sound = sound;
+}
+
+Animal.prototype.say = function () {
+  console.log(this.sound);
+};
+
+function Dog(name, sound) {
+  Animal.call(this, "개", name, sound);
+}
+function Cat(name, sound) {
+  Animal.call(this, "고양이", name, sound);
+}
+
+Dog.prototype = Animal.prototype;
+Cat.prototype = Animal.prototype;
+
+const dog = new Dog("멍멍이", "멍멍");
+const cat = new Cat("야옹이", "야옹~");
+
+dog.say();
+cat.say();
+```
+
+### ES6 class
+
+- javascript는 class 개념이 없었기에 이렇게 구현해 왔음
+  es6는 class 존재 하지만 다른 언어의 개념과는 조금 다름
+
+- 함수를 class 내부에서 사용 할 때 바로 prototype으로 설정됨
+
+- 상속을 받을 때는 constructor 안 super를 사용해 상속을 받아야함
+
+```jsx
+class Animal {
+  constructor(type, name, sound) {
+    this.type = type;
+    this.name = name;
+    this.sound = sound;
+  }
+  say() {
+    console.log(this.sound);
+  }
+}
+
+class Dog extends Animal {
+  constructor(name, sound) {
+    super("개", name, sound);
+  }
+}
+class Cat extends Animal {
+  constructor(name, sound) {
+    super("고양이", name, sound);
+  }
+}
+
+const dog = new Dog("멍멍이", "멍멍");
+const cat = new Cat("나비", "야옹~");
+const cat2 = new Cat("나비2", "하위");
+dog.say();
+cat.say();
+cat2.say();
+```
+
+### class 만들어보기
+
+- 클래스 내부에 선언하는 함수 -> **method**
+- 자소분리
+
+```javascript
+class Food {
+  constructor(name) {
+    this.name = name;
+    this.brands = [];
+  }
+  addBrand(brand) {
+    this.brands.push(brand);
+  }
+  print() {
+    console.log(`${this.name} 을 파는 음식점들`);
+    console.log(this.brands.join(", "));
+  }
+}
+
+const pizza = new Food("피자");
+pizza.addBrand("피자헛");
+pizza.addBrand("도미노");
+console.log(pizza.brands);
+pizza.print();
+```
+
+### 삼항 연산자
+
+- 다중으로 사용가능
+
+```jsx
+const array = [];
+let text = array.length === 0 ? "배열이 비어있습니다." : "비어있지 않습니다.";
+console.log(text);
+```
+
+### Truthy and Falsy
+
+True 같은 Flase 같은 걸 의미
+
+에러 null checking -> undefined
+
+```javascript
+console.log(!undefined);
+console.log(!null);
+console.log(!0);
+console.log("");
+console.log(!Nan);
+console.log(!false);
+```
+
+위를 제외한 모든 값들은 false로 나타남
+!로 했을 경우
+
+```javascript
+const Truthy = value ? true : false;
+console.log(Truthy);
+```
+
+!! 두번을 사용하면 삼항 연산자 사용하지 않고도
