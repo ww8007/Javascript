@@ -1269,3 +1269,90 @@ setTimeout(() => {
   2. 파일 읽기
   3. 암호화/복호화
   4. 작업예약
+
+### Promise
+
+비동기작업을 좀 더 편하게 하도록 도입
+이전의 비동기 -> callback 함수로 처리 -> 비동기 작업 많아지면 코드 난잡
+
+- 성공 -> resolve
+- 실패 -> reject
+
+- then을 사용해 promise 작업 끝난 뒤 할 작업 설정 가능
+- catch 사용하여 에러 잡아내기 가능
+
+```javascript
+const myPromise = new Promise((resolve, reject) => {
+  // 구현...
+  setTimeout(() => {
+    reject(new Error());
+  }, 1000);
+});
+
+myPromise
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((e) => {
+    console.log(e);
+  });
+```
+
+- 오류가 나타나는 타이밍과 결과에 따른 작업 어려움
+
+```javascript
+function increaseAndPrint(n) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const value = n + 1;
+      if (value === 5) {
+        const error = new Error();
+        error.name = "ValueisFiveOver";
+        reject(error);
+        return;
+      }
+      console.log(value);
+      resolve(value);
+    }, 1000);
+  });
+}
+
+increaseAndPrint(0)
+  .then(increaseAndPrint)
+  .then(increaseAndPrint)
+  .then(increaseAndPrint)
+  .then(increaseAndPrint)
+  .then(increaseAndPrint)
+  .catch((e) => {
+    console.log(e);
+  });
+```
+
+### async/await
+
+Promise 더 쉽게 사용 가능
+
+es8에 소개된 문법
+
+함수의 앞부분에는 **async**
+
+Promise의 앞부분에는 **await**
+
+- return 값을 받아낼 때는 이렇게 사용
+
+```javascript
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function process() {
+  console.log("안녕하세요");
+  await sleep(1000);
+  console.log("반갑습니다.");
+  return true;
+}
+
+process().then((value) => {
+  console.log(value);
+});
+```
