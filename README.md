@@ -18,6 +18,16 @@
 - [반복문](#반복문)
 - [배열 내장함수](#배열-내장함수)
 - [Reducer](#reducer)
+- [프로토타입과 클래스](#프로토타입과-클래스)
+- [객체생성자 상속](#객체생성자-상속)
+- [ES6 class](#es6-class)
+- [class 만들어보기](#class-만들어보기)
+- [삼항 연산자](#삼항-연산자)
+- [Truthy and Falsy](#truthy-and-falsy)
+- [단축 평가 논리 계산법](#단축-평가-논리-계산법)
+- [함수의 기본 파라미터](#함수의-기본-파라미터)
+- [조건문 더 스마트하게 쓰기](#조건문-더-스마트하게-쓰기)
+- [비구조화-할당](#비구조화-할당)
 
 ### Codesandbox
 
@@ -800,7 +810,8 @@ console.log(text);
 
 True 같은 Flase 같은 걸 의미
 
-에러 null checking -> undefined
+- 빈 배열의 경우 -> Truthy로 봄
+  에러 null checking -> undefined
 
 ```javascript
 console.log(!undefined);
@@ -808,7 +819,6 @@ console.log(!null);
 console.log(!0);
 console.log("");
 console.log(!Nan);
-console.log(!false);
 ```
 
 위를 제외한 모든 값들은 false로 나타남
@@ -819,4 +829,252 @@ const Truthy = value ? true : false;
 console.log(Truthy);
 ```
 
-!! 두번을 사용하면 삼항 연산자 사용하지 않고도
+!! 두번을 사용하면 삼항 연산자 사용하지 않고도 파악 가능
+
+### 단축 평가 논리 계산법
+
+논리 연산자 사용하여 코드 더 짧게 의미
+
+- &&
+  앞 **true or truthy** 결과 -> 뒤에
+  앞 **false or falsy** 결과 -> 앞에
+
+  ```javascript
+  console.log(true && "hello");
+  console.log(false && "hello");
+  console.log("hello" && "bye");
+  console.log(false && false);
+  console.log(null && "hello");
+  console.log(undefined && "hello");
+  ```
+
+  - 리엑트에서 조건부 랜더링
+
+    ```javascript
+    const object = { name: 1 };
+
+    const name = object && object.name;
+
+    console.log(name);
+    ```
+
+* ||
+  && 연산자와 반대 개념
+  앞 **true or truthy** 결과 -> 앞에
+  앞 **false or falsy** 결과 -> 뒤에
+
+  ```javascript
+  console.log(false || "hello");
+  console.log("" || "이름 없다.");
+  console.log(null || "이름없다");
+  console.log(1 || "?음");
+  console.log(true || "절대 안봐요");
+  ```
+
+### 함수의 기본 파라미터
+
+- 함수의 기본 파라미터를 지정하여 오류를 해결할 수 있다.
+
+- 일반적 함수
+
+```javascript
+function calculateCircleArea(r = 1) {
+  return Math.PI * r * r;
+}
+
+const area = calculateCircleArea();
+
+console.log(area);
+```
+
+- 화살표 함수
+
+```javascript
+const getR = (r = 1) => Math.PI * r * r;
+
+const number = getR();
+console.log(number);
+```
+
+### 조건문 더 스마트하게 쓰기
+
+- 특정 값이 여러 값 중 하나일 때를 찾을 경우가 있음
+  === 연산자 많이 사용하는 경우가 존재
+- 배열 내장 함수 중 **include** 사용
+
+  ```javascript
+  function isAnimal(text) {
+    const animals = ["고양이", "개", "거북이", "너구리"];
+    return animals.includes(text);
+  }
+
+  console.log(isAnimal("개"));
+  console.log(isAnimal("수박"));
+  ```
+
+  - 화살표 함수로 표현
+    ```javascript
+    const isAnimal = (animal) => ["고양이", "개", "거북이"].includes(animal);
+    ```
+
+* 조건에 따른 다른값을 return 해야 하는 경우
+  객체를 사용하여 key 값으로 설정해 준 뒤 return
+  객체이름[par]
+
+  ```javascript
+  const getSound = (animal) => {
+    const sounds = {
+      개: "멍멍",
+      고양이: "야옹~",
+      참새: "짹짹",
+    };
+    return sounds[animal] || "...?";
+  };
+
+  console.log(getSound("코뿔소"));
+  ```
+
+* 조건에 따라 다른 함수 호출하고 싶은 경우
+  객체안 함수들을 선언 한뒤
+
+```javascript
+function makeSound(animal) {
+  const tasks = {
+    개: () => console.log("멍멍"),
+    고양이: () => console.log("야옹"),
+    비둘기: () => console.log("구구구구"),
+  };
+  const task = tasks[animal];
+  if (!task) {
+    console.log("...?");
+    return;
+  }
+  task();
+}
+
+makeSound("개");
+```
+
+### 비구조화 할당
+
+- 구조분해
+  아래 와 같이 사용이 가능하다.
+
+```javascript
+const object = {
+  a: 1,
+  b: 2,
+};
+const { a, b } = object;
+
+function print({ a, b }) {
+  console.log(a);
+  console.log(b);
+}
+
+console.log(a);
+console.log(b);
+print(object);
+```
+
+- 인자가 없을 때는 par에 설정이 가능
+
+  ```javascript
+  const object = {
+    a: 1,
+  };
+  const { a, b = 2 } = object;
+
+  function print({ a, b = 2 }) {
+    console.log(a);
+    console.log(b);
+  }
+
+  console.log(a);
+  console.log(b);
+  print(object);
+  ```
+
+* 비구조할당에서 이름을 바꾸어서 사용 가능
+
+  ```javascript
+  const animal = {
+    name: "멍멍이",
+    type: "개",
+  };
+
+  const { name: nickname } = animal;
+
+  console.log(nickname);
+  ```
+
+* 배열에서도 비구조 할당 가능
+
+  ```javascript
+  const array = [1, 2];
+
+  const [one, two] = array;
+
+  console.log(one);
+  console.log(two);
+  ```
+
+* 객체에서의 깊은 값 꺼내기
+
+  1. 비구조 할당 문법 두 번 사용
+
+  - 만약 특정 객체 생성시 특정 키로 생성된 값이 존재 할 시 생략 가능
+
+  ```javascript
+  const deepObj = {
+    state: {
+      information: {
+        name: "Jang",
+        lan: ["kor", "chi", "japan"],
+      },
+    },
+    value: 5,
+  };
+
+  const { name, lan } = deepObj.state.information;
+  const { value } = deepObj;
+
+  const extract = {
+    name: name,
+    lan,
+    value,
+  };
+  console.log(extract);
+  ```
+
+  2. 객체로 비구조 할당 가능
+
+     ```javascript
+     const deepObj = {
+       state: {
+         information: {
+           name: "Jang",
+           lan: ["kor", "chi", "japan"],
+         },
+       },
+       value: 5,
+     };
+
+     const {
+       state: {
+         information: {
+           name,
+           lan: [first], sec], // 이름 변경 가능
+         },
+       },
+       value,
+     } = deepObj;
+
+     const extract = {
+       name: name,
+       first,
+       sec,
+       value,
+     };
+     console.log(extract);
+     ```
