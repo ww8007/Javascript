@@ -28,6 +28,9 @@
 - [함수의 기본 파라미터](#함수의-기본-파라미터)
 - [조건문 더 스마트하게 쓰기](#조건문-더-스마트하게-쓰기)
 - [비구조화-할당](#비구조화-할당)
+- [spread](#spread)
+- [rest](#rest)
+- [Scope](#scope)
 
 ### Codesandbox
 
@@ -1078,3 +1081,131 @@ print(object);
      };
      console.log(extract);
      ```
+
+### spread
+
+- ... 사용
+
+spread - 펼치다, 펼처지다
+... 사용해서 복사 생성 후 사용
+얕은 복사 개념
+
+```javascript
+const Slime = {
+  name: "슬라임",
+};
+const cuteSlime = {
+  ...Slime,
+  attribute: "cute",
+};
+const purpleCuteSlime = {
+  ...cuteSlime,
+  color: "purple",
+};
+
+console.log(Slime);
+console.log(cuteSlime);
+console.log(purpleCuteSlime);
+```
+
+- 위의 코드에서
+  ```javascript
+  const greenCuteSlie = {
+    ...purpleCuteSlime,
+    color: "green",
+  };
+  ```
+  추가할 경우 spread 연산자 사용 전에 이전 속성값이 있냐 없냐 여부에 따라서 출력되는게 복사된 값을 보여주냐 아니면 새로 덮어씌우냐 개념으로 나뉘게 된다.
+
+* 배열에서도 spread 연산자 사용 가능
+
+  - concat을 사용하면 동일한 효과
+
+    ```javascript
+    const anmals = ["개", "고양이", "참새"];
+
+    const anotherAnimals = [...anmals, "비둘기"];
+    const anotherAnimals = anmals.concat("비둘기");
+    console.log(anotherAnimals);
+    ```
+
+### rest
+
+rest
+생김새는 비슷 객체, 배열, 함수 파라미터에서 사용가능
+
+- rest는 마지막에 와야한다.
+
+```javascript
+const purpleCuteSlime = {
+  name: "슬라임",
+  attribue: "cute",
+  color: "purple",
+};
+
+const { color, ...rest } = purpleCuteSlime;
+
+console.log(rest);
+```
+
+- 배열에서도 사용 가능
+
+  ```javascript
+  const numbers = [1, 2, 3, 4, 5, 6];
+
+  const [one, two, ...rest] = numbers;
+
+  console.log(one);
+  console.log(two);
+  console.log(rest);
+  ```
+
+- spread는 퍼뜨린다는 개념
+- rest 모아준다는 개념 -> 나머지 개념으로 다른 것들 다 사용 가능
+
+* 함수 파라미터에서 rest
+
+  - 함수의 파라미터에서 rest를 사용하면 par들을 하나의 배열로 받아옴
+
+  ```javascript
+  function sum(...rest) {
+    return rest.reduce((acc, current) => acc + current, 0);
+  }
+
+  console.log(sum(1, 2, 3, 4));
+  ```
+
+* 함수 인자에서의 spread
+
+  - 파라미터 - 함수 선언부에 함수 옆에 존재
+  - 인자 - 실행부에 함수 옆에 존재
+
+  ```javascript
+  function sum(...rest) {
+    return rest.reduce((acc, current) => acc + current, 0);
+  }
+
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+
+  console.log(sum(...numbers));
+  ```
+
+### Scope
+
+- 변수 혹은 함수를 선언할 때 어디서 어디까지 유효한지 범위
+
+1. Global
+2. Function
+3. Block
+
+var 변수를 사용하면 Global만 유효 Function, Block의 경우는 달라짐
+let 키워드를 사용하면 블록 내에서만 바뀌도록 전환
+
+### Hoisting
+
+- 선언되지 않은 함수또는 변수를 끌어올려서 사용
+- const, let 같은 경우는 Hoisting이 발생 x
+  - **var**의 경우만 발생
+
+함수를 변수에 담으면 Hoisting 발생 x
+eslint -> Hoisting 발생 error 눈으로 확인 가능
