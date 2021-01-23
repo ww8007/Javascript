@@ -31,6 +31,8 @@
 - [spread](#spread)
 - [rest](#rest)
 - [Scope](#scope)
+- [Hoisting](#hoisting)
+- [비동기 처리](#비동기-처리)
 
 ### Codesandbox
 
@@ -1209,3 +1211,61 @@ let 키워드를 사용하면 블록 내에서만 바뀌도록 전환
 
 함수를 변수에 담으면 Hoisting 발생 x
 eslint -> Hoisting 발생 error 눈으로 확인 가능
+
+### 비동기 처리
+
+동기적 : 시간 순서대로 감
+비동기적 : 한 타임에 모든것을 실행가능
+흐름이 멈추지 않음
+
+- 동기적 코드
+
+```javascript
+function work() {
+  const start = Date.now();
+  for (let i = 0; i < 1000000000; i++) {}
+  const end = Date.now();
+  console.log(end - start + "ms");
+}
+
+work();
+console.log("다음작업");
+```
+
+- setTimeout
+  - 실제적으로는 4ms 정도 소요되어 있다가 시작(브라우저 최소 지정단위)
+
+```javascript
+setTimeout(() => {
+  const start = Date.now();
+  for (let i = 0; i < 1000000000; i++) {}
+  const end = Date.now();
+  console.log(end - start + "ms");
+}, 0);
+```
+
+- 비동기 코드를 실행 할 때 callback 함수 사용
+
+  ```javascript
+  function work(callback) {
+    setTimeout(() => {
+      const start = Date.now();
+      for (let i = 0; i < 1000000000; i++) {}
+      const end = Date.now();
+      console.log(end - start + "ms");
+      callback(end - start);
+    }, 0);
+  }
+  console.log("작업시작");
+  work((ms) => {
+    console.log("작업 끝");
+    console.log(ms + "ms 걸렸따고 하네요");
+  });
+  console.log("다음작업");
+  ```
+
+* 비동기적 처리 작업
+  1. Ajax Web API 요청
+  2. 파일 읽기
+  3. 암호화/복호화
+  4. 작업예약
