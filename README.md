@@ -1356,3 +1356,49 @@ process().then((value) => {
   console.log(value);
 });
 ```
+
+- 여러개의 Promise 동시에 사용
+  사용 하고 싶은 async 구문들을 합쳐서 배열로 만든 뒤 Promise.all로 감싸줌
+  - Promise.all 의 경우 하나라도 오류가 나면 동작을 하지 않음
+  ```javascript
+  async function process() {
+    const results = await Promise.all([getDog(), getRabbit(), getTurtle()]);
+    console.log(results);
+  }
+  ```
+
+* 시간초 보는 법(총 걸린 시간)
+
+  ```jsx
+  async function process() {
+    const start = Date.now();
+    const results = await Promise.all([getDog(), getRabbit(), getTurtle()]);
+    console.log(Date.now() - start);
+    console.log(results);
+  }
+  ```
+
+* 구조 분해를 사용하여 각자 보기
+
+  ```javascript
+  async function process() {
+    const [dog, rabbit, turtle] = await Promise.all([
+      getDog(),
+      getRabbit(),
+      getTurtle(),
+    ]);
+    console.log(dog);
+    console.log(rabbit);
+    console.log(turtle);
+  }
+  ```
+
+* 가장 먼저 끝난 Promise 알아보기 -> Promise.race
+  - 가장 빨리 끝난게 에러일 경우만 에러로 간주
+  * 도중에 취소 처리 하는 경우 사용 가능
+  ```javascript
+  async function process() {
+    const first = await Promise.race([getDog(), getRabbit(), getTurtle()]);
+    console.log(first);
+  }
+  ```
